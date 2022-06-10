@@ -53,7 +53,16 @@ class ViewController: UIViewController {
              content layout guide, I’m able to set the content size width directly to zero, which
              states precisely what I mean: don’t scroll horizontally.
              */
-            scrollView.contentLayoutGuide.widthAnchor.constraint(equalToConstant: 0).activate()
+//            scrollView.contentLayoutGuide.widthAnchor.constraint(equalToConstant: 0).activate()
+            
+            
+            /*
+            Also starting in iOS 11, there’s a second UIScrollView property, its frameLayout-
+            Guide, which is pinned to the scroll view’s frame. This gives us an even better way to
+            state that the scroll view should not scroll horizontally, by making the content layout
+            guide width the same as the frame layout guide width:
+             */
+            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor).activate()
         }
         
     }
