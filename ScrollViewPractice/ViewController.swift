@@ -38,16 +38,22 @@ class ViewController: UIViewController {
             label.text = "This is label \(i)"
             scrollView.addSubview(label)
             
-            label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10).activate()
-            label.topAnchor.constraint(equalTo: previousLabel?.bottomAnchor ?? scrollView.topAnchor, constant: 10).activate()
+            label.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 10).activate()
+            label.topAnchor.constraint(equalTo: previousLabel?.bottomAnchor ?? scrollView.contentLayoutGuide.topAnchor, constant: 10).activate()
             
             previousLabel = label
         }
         
         // Attaching the last label to the bottom of scroll view to auto calculate the content size of the scroll view
         if let previousLabel = previousLabel {
-            previousLabel.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).activate()
-            previousLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).activate()
+            previousLabel.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: 10).activate()
+            /*
+             This line demonstrates that we can set the content layout guide’s height or width
+             constraint directly to determine that dimension of the content size. Thanks to the
+             content layout guide, I’m able to set the content size width directly to zero, which
+             states precisely what I mean: don’t scroll horizontally.
+             */
+            scrollView.contentLayoutGuide.widthAnchor.constraint(equalToConstant: 0).activate()
         }
         
     }
