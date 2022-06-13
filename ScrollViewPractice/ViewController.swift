@@ -33,35 +33,40 @@ class ViewController: UIViewController {
         let contentView = UIView()
         scrollView.addSubview(contentView)
         
-        // Adding items to content view without constraints
-        // So settiing the contentSize of SV explicitely by calculating it
-        var y: CGFloat = 10
-        var maxW: CGFloat = 0
+        /*
+         Third way where content view is self sizing based on the constraints
+         from its subviews (labels). And the CV/s edges are pinned by constraints
+         to the SV's content layout guide.
+         */
+        var previousLabel: UILabel? = nil
         
         for i in 0...299 {
             
             let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
             label.text = "This is label \(i + 1)"
-            label.sizeToFit()
-            label.frame.origin = CGPoint(x: 0, y: y)
+            
             contentView.addSubview(label)
-            y += label.frame.size.height + 10
-            maxW = max(maxW, label.frame.maxX + 10)
+            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).activate()
+            label.topAnchor.constraint(equalTo: previousLabel?.bottomAnchor ?? contentView.topAnchor, constant: 10).activate()
+            
+            previousLabel = label
         }
-        
-        // set content view width, height and edge constraints
-        // content size is calculated for us
+
+        if let previousLabel = previousLabel {
+            contentView.bottomAnchor.constraint(equalTo: previousLabel.bottomAnchor, constant: 10).activate()
+            contentView.trailingAnchor.constraint(equalTo: previousLabel.trailingAnchor, constant: 10).activate()
+        }
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        let scrollViewContentLayoutGuide = scrollView.contentLayoutGuide
         
         NSLayoutConstraint.activate([
-            contentView.widthAnchor.constraint(equalToConstant: maxW),
-            contentView.heightAnchor.constraint(equalToConstant: y),
-            scrollViewContentLayoutGuide.topAnchor.constraint(equalTo: contentView.topAnchor),
-            scrollViewContentLayoutGuide.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            scrollViewContentLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            scrollViewContentLayoutGuide.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: contentView.topAnchor),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
+
+        
     }
 
 
