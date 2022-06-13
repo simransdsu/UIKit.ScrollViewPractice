@@ -49,8 +49,19 @@ class ViewController: UIViewController {
             maxW = max(maxW, label.frame.maxX + 10)
         }
         
-        contentView.frame = CGRect(x: 0, y: 0, width: maxW, height: y)
-        scrollView.contentSize = contentView.frame.size
+        // set content view width, height and edge constraints
+        // content size is calculated for us
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        let scrollViewContentLayoutGuide = scrollView.contentLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            contentView.widthAnchor.constraint(equalToConstant: maxW),
+            contentView.heightAnchor.constraint(equalToConstant: y),
+            scrollViewContentLayoutGuide.topAnchor.constraint(equalTo: contentView.topAnchor),
+            scrollViewContentLayoutGuide.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            scrollViewContentLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            scrollViewContentLayoutGuide.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        ])
     }
 
 
